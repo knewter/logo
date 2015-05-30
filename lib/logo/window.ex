@@ -4,7 +4,6 @@ defmodule Logo.Window do
   """
 
   @title 'Logo'
-  @side 5.0
 
   require Record
   Record.defrecordp :wx, Record.extract(:wx, from_lib: "wx/include/wx.hrl")
@@ -25,7 +24,7 @@ defmodule Logo.Window do
     :wx.batch(fn() -> do_init(config) end)
   end
 
-  def do_init(_config) do
+  def do_init(config) do
     wx = :wx.new
     frame = :wxFrame.new(wx, -1, @title, size: {1000, 1000})
     panel = :wxPanel.new(frame, [])
@@ -43,9 +42,10 @@ defmodule Logo.Window do
     :wxFrame.show(frame)
     receive do
       :ok -> :ok
-      after 1000 ->
+      after 100 -> # Have to wait for a little for the window to exist
+                   # before creating the drawing context
         dc = :wxPaintDC.new(win)
-        draw(:ok, dc)
+        draw(config, dc)
     end
     receive do
       :ok -> :ok
@@ -53,22 +53,12 @@ defmodule Logo.Window do
     :wxPaintDC.destroy(dc)
   end
 
-  def draw(state, dc) do
-    do_draw(state, dc)
+  def draw(config, dc) do
+    do_draw(config, dc)
   end
 
-  def do_draw(_state, dc) do
+  def do_draw(config, dc) do
     canvas = :wxGraphicsContext.create(dc)
-    brush = :wxBrush.new({255, 0, 0, 255})
-    draw_square(canvas, 10, 10, brush)
-  end
-
-  def draw_square(canvas, x, y, brush) do
-    :wxGraphicsContext.setBrush(canvas, brush)
-    :wxGraphicsContext.setPen(canvas, :wx_const.wx_black_pen)
-    true_x = @side * x
-    true_y = @side * y
-    :wxGraphicsContext.drawRectangle(canvas, true_x, true_y, @side, @side)
-    :ok
+    Logo.Renderer.render(canvas, config)
   end
 end
