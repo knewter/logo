@@ -8,7 +8,8 @@ defmodule Logo.Instance do
       pen_down: false,
       x: 0,
       y: 0,
-      angle: 0
+      angle: 0,
+      shapes: []
     ]
   end
 
@@ -60,7 +61,11 @@ defmodule Logo.Instance do
   def handle_cast({:forward, amount}, turtle) do
     delta_x = amount * :math.cos(radians(turtle.angle))
     delta_y = amount * :math.sin(radians(turtle.angle))
-    {:noreply, %Turtle{turtle|x: turtle.x + delta_x, y: turtle.y + delta_y}}
+    shapes = turtle.shapes
+    if(turtle.pen_down) do
+      shapes = [{:line, {turtle.x, turtle.y}, {turtle.x + delta_x, turtle.y + delta_y}}|shapes]
+    end
+    {:noreply, %Turtle{turtle|x: turtle.x + delta_x, y: turtle.y + delta_y, shapes: shapes}}
   end
   def handle_cast({:angle_delta, angle}, turtle) do
     angle = rem(360 + turtle.angle + angle, 360)
