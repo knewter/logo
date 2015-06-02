@@ -16,15 +16,15 @@ defmodule Logo.Window do
     defstruct pixels: []
   end
 
-  def start(config) do
-    do_init(config)
+  def start(instance) do
+    do_init(instance)
   end
 
-  def init(config) do
-    :wx.batch(fn() -> do_init(config) end)
+  def init(instance) do
+    :wx.batch(fn() -> do_init(instance) end)
   end
 
-  def do_init(config) do
+  def do_init(instance) do
     wx = :wx.new
     frame = :wxFrame.new(wx, -1, @title, size: {1000, 1000})
     panel = :wxPanel.new(frame, [])
@@ -45,7 +45,7 @@ defmodule Logo.Window do
       after 100 -> # Have to wait for a little for the window to exist
                    # before creating the drawing context
         dc = :wxPaintDC.new(win)
-        draw(config, dc)
+        draw(instance, dc)
     end
     receive do
       :ok -> :ok
@@ -53,12 +53,14 @@ defmodule Logo.Window do
     :wxPaintDC.destroy(dc)
   end
 
-  def draw(config, dc) do
-    do_draw(config, dc)
+  def draw(instance, dc) do
+    do_draw(instance, dc)
   end
 
-  def do_draw(config, dc) do
+  def do_draw(instance, dc) do
     canvas = :wxGraphicsContext.create(dc)
-    Logo.Renderer.render(canvas, config)
+    Logo.Renderer.render(canvas, instance)
+    :timer.sleep(100)
+    do_draw(instance, dc)
   end
 end

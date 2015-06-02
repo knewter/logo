@@ -1,4 +1,7 @@
+import Logo.Instance
+
 {:ok, logo} = Logo.Instance.start
+#{:ok, renderer} = Logo.Drawing.start(logo)
 logo
 |> color({255, 0, 0})
 |> pen_down
@@ -7,3 +10,5 @@ logo
 |> forward(200)
 |> right(180)
 |> forward(400)
+
+Logo.Window.start(logo)
