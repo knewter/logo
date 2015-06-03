@@ -32,6 +32,14 @@ defmodule Logo.InstanceTest do
     assert_in_delta(400, turtle.x, 0.000001)
   end
 
+  test "can move to a particular position", meta do
+    turtle = meta[:pid]
+             |> Instance.move_to({500, 500})
+             |> Instance.get_turtle
+    assert 500 = turtle.x
+    assert 500 = turtle.y
+  end
+
   test "can rotate", meta do
     turtle = meta[:pid]
              |> Instance.right(90)

@@ -3,7 +3,6 @@ defmodule Logo.Renderer do
   @side 5.0
 
   def render(canvas, instance) do
-    brush = :wxBrush.new({0, 0, 0, 255})
     turtle = Instance.get_turtle(instance)
     draw_shapes(canvas, turtle.shapes)
   end

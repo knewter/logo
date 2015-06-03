@@ -43,6 +43,11 @@ defmodule Logo.Instance do
     pid
   end
 
+  def move_to(pid, {x, y}) do
+    :ok = GenServer.cast(pid, {:move_to, {x, y}})
+    pid
+  end
+
   def get_turtle(pid) do
     GenServer.call(pid, :get_turtle)
   end
@@ -70,6 +75,9 @@ defmodule Logo.Instance do
   def handle_cast({:angle_delta, angle}, turtle) do
     angle = rem(360 + turtle.angle + angle, 360)
     {:noreply, %Turtle{turtle|angle: angle}}
+  end
+  def handle_cast({:move_to, {x, y}}, turtle) do
+    {:noreply, %Turtle{turtle|x: x, y: y}}
   end
 
   def handle_call(:get_turtle, _from, turtle) do
