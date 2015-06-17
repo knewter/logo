@@ -9,7 +9,8 @@ defmodule Logo.Instance do
       x: 0,
       y: 0,
       angle: 0,
-      shapes: []
+      shapes: [],
+      positions: []
     ]
   end
 
@@ -48,6 +49,16 @@ defmodule Logo.Instance do
     pid
   end
 
+  def pushpos(pid) do
+    GenServer.cast(pid, :pushpos)
+    pid
+  end
+
+  def poppos(pid) do
+    GenServer.cast(pid, :poppos)
+    pid
+  end
+
   def get_turtle(pid) do
     GenServer.call(pid, :get_turtle)
   end
@@ -78,6 +89,15 @@ defmodule Logo.Instance do
   end
   def handle_cast({:move_to, {x, y}}, turtle) do
     {:noreply, %Turtle{turtle|x: x, y: y}}
+  end
+  def handle_cast({:move_to, {x, y}}, turtle) do
+    {:noreply, %Turtle{turtle|x: x, y: y}}
+  end
+  def handle_cast(:pushpos, turtle) do
+    {:noreply, %Turtle{turtle|positions: [{turtle.x, turtle.y}|turtle.positions]}}
+  end
+  def handle_cast(:poppos, turtle=%Turtle{positions: [{x, y}|positions]}) do
+    {:noreply, %Turtle{turtle|x: x, y: y, positions: positions}}
   end
 
   def handle_call(:get_turtle, _from, turtle) do

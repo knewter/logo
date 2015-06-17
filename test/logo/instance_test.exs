@@ -67,4 +67,26 @@ defmodule Logo.InstanceTest do
     assert_in_delta(1, turtle.x, 0.000001)
     assert_in_delta(1, turtle.y, 0.000001)
   end
+
+  test "pushing position", meta do
+    turtle = meta[:pid]
+             |> Instance.forward(1)
+             |> Instance.pushpos
+             |> Instance.forward(1)
+             |> Instance.pushpos
+             |> Instance.get_turtle
+    assert [{2.0, 0.0}, {1.0, 0.0}] = turtle.positions
+  end
+
+  test "popping position", meta do
+    turtle = meta[:pid]
+             |> Instance.forward(1)
+             |> Instance.pushpos
+             |> Instance.forward(1)
+             |> Instance.poppos
+             |> Instance.get_turtle
+    assert [] = turtle.positions
+    assert_in_delta(1, turtle.x, 0.000001)
+    assert_in_delta(0, turtle.y, 0.000001)
+  end
 end
