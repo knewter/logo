@@ -13,8 +13,8 @@ defmodule Logo.Renderer do
   end
   def draw_shapes(_canvas, []), do: :ok
 
-  def draw_shape(canvas, {:line, {x1, y1}, {x2, y2}}) do
-    pen = :wxPen.new({255, 0, 0, 255})
+  def draw_shape(canvas, {:line, {r, g, b}, {x1, y1}, {x2, y2}}) do
+    pen = :wxPen.new({r, g, b, 255})
     :wxGraphicsContext.setPen(canvas, pen)
     :wxGraphicsContext.drawLines(canvas, [{x1, y1}, {x2, y2}])
     :ok

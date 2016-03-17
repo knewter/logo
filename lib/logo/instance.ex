@@ -4,7 +4,7 @@ defmodule Logo.Instance do
 
   defmodule Turtle do
     defstruct [
-      color: nil,
+      color: {255, 0, 0},
       pen_down: false,
       x: 0,
       y: 0,
@@ -68,7 +68,7 @@ defmodule Logo.Instance do
     delta_y = amount * :math.sin(radians(turtle.angle))
     shapes = turtle.shapes
     if(turtle.pen_down) do
-      shapes = [{:line, {turtle.x, turtle.y}, {turtle.x + delta_x, turtle.y + delta_y}}|shapes]
+      shapes = [{:line, turtle.color, {turtle.x, turtle.y}, {turtle.x + delta_x, turtle.y + delta_y}}|shapes]
     end
     {:noreply, %Turtle{turtle|x: turtle.x + delta_x, y: turtle.y + delta_y, shapes: shapes}}
   end
