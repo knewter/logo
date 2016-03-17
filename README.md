@@ -30,3 +30,11 @@ logo
 |> right(180)
 |> forward(400)
 ```
+
+### Examples
+
+```sh
+mix run examples/basic.exs
+mix run examples/interesting.exs
+mix run examples/pi_walk.exs
+```
